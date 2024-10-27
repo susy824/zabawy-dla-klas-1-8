@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Zabawa szkolna dla klas 1-8</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        body.dark {
+            background-color: #333;
+            color: white;
+        }
+        .ad {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 150px;
+            height: 200px;
+            background-color: #ddd;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+        .ad:hover {
+            transform: scale(1.05);
+        }
+        .ad.left {
+            left: 10px;
+        }
+        .ad.right {
+            right: 10px;
+        }
+        button {
+            font-size: 1.5em;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+        h1, h2 {
+            font-size: 2em;
+            transition: color 0.5s;
+        }
+        body.dark h1, body.dark h2 {
+            color: white;
+        }
+        .hidden {
+            display: none;
+        }
+        .feedback {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+        .warning {
+            font-size: 0.9em;
+            color: gray;
+            margin-top: 80px;
+            text-align: center;
+        }
+        .toggle-button {
+            font-size: 1.2em;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .back-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: red;
+            color: white;
+            font-size: 1.5em;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Zabawa szkolna dla klas 1-8</h1>
+    <button id="playButton">Graj</button>
+    <button id="settingsButton">Ustawienia</button>
+    <button id="creatorButton">Twórca</button>
+
+    <div class="ad left" onclick="openAd('https://www.gry.pl')">
+        <img id="gameImage" src="https://via.placeholder.com/150x100.png?text=FNaF+1" alt="Gry.pl">
+    </div>
+    <div class="ad right" onclick="openAd('https://www.allegro.pl')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Allegro_logo.svg" alt="Allegro">
+    </div>
+
+    <div id="game" class="hidden">
+        <h2>Wybierz Poziom Trudności</h2>
+        <button id="easyButton">Łatwy</button>
+        <button id="normalButton">Normalny</button>
+        <button id="hardButton">Matematyk</button>
+        <button id="backFromGameButton" class="back-button">Wróć</button>
+    </div>
+
+    <div id="settings" class="hidden">
+        <h2>Ustawienia</h2>
+        <button id="closeSettingsButton">Zamknij Ustawienia</button>
+        <h3>Wybierz Styl Przycisków</h3>
+        <button id="buttonStyle1">Styl 1</button>
+        <button id="buttonStyle2">Styl 2</button>
+        <button id="buttonStyle3">Styl 3</button>
+        <button id="buttonStyle4">Styl 4</button>
+        <button id="buttonStyle5">Styl 5</button>
+
+        <h3>Wybierz Kolor Tła</h3>
+        <button id="background1">Kolor 1</button>
+        <button id="background2">Kolor 2</button>
+        <button id="background3">Kolor 3</button>
+        <button id="background4">Kolor 4</button>
+        <button id="background5">Kolor 5</button>
+
+        <h3>Tryb Wyświetlania</h3>
+        <button id="toggleTheme" class="toggle-button">Przełącz na tryb ciemny</button>
+    </div>
+
+    <div id="creator" class="hidden">
+        <h2>Twórca</h2>
+        <p style="font-size: 1.2em; text-align: center;">
+            Twórca: <strong>Robin Knapczyk</strong><br>
+            Za pomocą: <strong><a href="https://chatgpt.com" style="color: blue; text-decoration: underline;">ChatGPT</a>, Notatnik</strong>
+        </p>
+        <p class="warning">UWAGA! Strona może zawierać błędy. Jeśli zobaczycie jakiś błąd, proszę o skontaktowanie się na email: <a href="mailto:robinknapczyk998@gmail.com">robinknapczyk998@gmail.com</a></p>
+        <button id="backFromCreatorButton" class="back-button">Wróć</button>
+    </div>
+
+    <div id="quiz" class="hidden">
+        <h2 id="question">Pytanie</h2>
+        <p id="timer"></p>
+        <input type="number" id="answer">
+        <button id="answerButton">Odpowiedz</button>
+        <div id="feedback" class="feedback"></div>
+    </div>
+
+    <script>
+        let currentLevel = '';
+        let questions = [];
+        let answers = [];
+        let currentQuestion = 0;
+        let timeLeft = 0;
+        let timerId;
+
+        const gameImages = [
+            "https://example.com/fnaf1.jpg",
+            "https://example.com/free_the_ball.jpg",
+            "https://example.com/ogien_i_woda.jpg",
+            "https://example.com/agar_io.jpg",
+            "https://example.com/impostor.jpg"
+        ];
+        let currentImageIndex = 0;
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.body.classList.toggle('dark', currentTheme === 'dark');
+
+        document.getElementById('toggleTheme').innerText = currentTheme === 'dark' ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny';
+        document.getElementById('toggleTheme').addEventListener('click', toggleTheme);
+        document.getElementById('closeSettingsButton').addEventListener('click', showMainMenu);
+        document.getElementById('backFromGameButton').addEventListener('click', showMainMenu);
+        document.getElementById('backFromCreatorButton').addEventListener('click', showMainMenu);
+
+        function toggleTheme() {
+            const newTheme = document.body.classList.contains('dark') ? 'light' : 'dark';
+            document.body.classList.toggle('dark', newTheme === 'dark');
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('toggleTheme').innerText = newTheme === 'dark' ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny';
+        }
+
+        function changeAdImage() {
+            currentImageIndex = (currentImageIndex + 1) % gameImages.length;
+            document.getElementById('gameImage').src = gameImages[currentImageIndex];
+        }
+
+        setInterval(changeAdImage, 2000);
+
+        document.getElementById('playButton').addEventListener('click', startGame);
+        document.getElementById('settingsButton').addEventListener('click', showSettings);
+        document.getElementById('creatorButton').addEventListener('click', showCreator);
+        document.getElementById('easyButton').addEventListener('click', () => playGame('łatwy'));
+        document.getElementById('normalButton').addEventListener('click', () => playGame('normalny'));
+        document.getElementById('hardButton').addEventListener('click', () => playGame('matematyk'));
+        document.getElementById('answerButton').addEventListener('click', submitAnswer);
+        document.getElementById('buttonStyle1').addEventListener('click', () => changeButtonStyle('style1'));
+        document.getElementById('buttonStyle2').addEventListener('click', () => changeButtonStyle('style2'));
+        document.getElementById('buttonStyle3').addEventListener('click', () => changeButtonStyle('style3'));
+        document.getElementById('buttonStyle4').addEventListener('click', () => changeButtonStyle('style4'));
+        document.getElementById('buttonStyle5').addEventListener('click', () => changeButtonStyle('style5'));
+        document.getElementById('background1').addEventListener('click', () => changeBackground('#f0f0f0'));
+        document.getElementById('background2').addEventListener('click', () => changeBackground('#d1e7dd'));
+        document.getElementById('background3').addEventListener('click', () => changeBackground('#f8d7da'));
+        document.getElementById('background4').addEventListener('click', () => changeBackground('#fff3cd'));
+        document.getElementById('background5').addEventListener('click', () => changeBackground('#dbe5ff'));
+
+        function startGame() {
+            document.getElementById('playButton').classList.add('hidden');
+            document.getElementById('settingsButton').classList.add('hidden');
+            document.getElementById('creatorButton').classList.add('hidden');
+            document.getElementById('game').classList.remove('hidden');
+        }
+
+        function showSettings() {
+            document.getElementById('playButton').classList.add('hidden');
+            document.getElementById('settingsButton').classList.add('hidden');
+            document.getElementById('creatorButton').classList.add('hidden');
+            document.getElementById('settings').classList.remove('hidden');
+        }
+
+        function showMainMenu() {
+            document.getElementById('playButton').classList.remove('hidden');
+            document.getElementById('settingsButton').classList.remove('hidden');
+            document.getElementById('creatorButton').classList.remove('hidden');
+            document.getElementById('settings').classList.add('hidden');
+            document.getElementById('game').classList.add('hidden');
+            document.getElementById('quiz').classList.add('hidden');
+            document.getElementById('creator').classList.add('hidden');
+        }
+
+        function showCreator() {
+            document.getElementById('playButton').classList.add('hidden');
+            document.getElementById('settingsButton').classList.add('hidden');
+            document.getElementById('creatorButton').classList.add('hidden');
+            document.getElementById('creator').classList.remove('hidden');
+        }
+
+        function playGame(level) {
+            currentLevel = level;
+            startQuiz();
+        }
+
+        function startQuiz() {
+            document.getElementById('game').classList.add('hidden');
+            document.getElementById('quiz').classList.remove('hidden');
+            currentQuestion = 0;
+            questions = generateRandomQuestions();
+            answers = calculateAnswers(questions);
+            timeLeft = getTimeForLevel(currentLevel);
+            document.getElementById('timer').innerText = `Czas: ${timeLeft} minut`;
+            showQuestion();
+            startTimer();
+        }
+
+        function showQuestion() {
+            if (currentQuestion < questions.length) {
+                document.getElementById('question').innerText = questions[currentQuestion];
+                document.getElementById('feedback').innerText = '';
+            } else {
+                endQuiz();
+            }
+        }
+
+        function submitAnswer() {
+            const userAnswer = parseInt(document.getElementById('answer').value);
+            if (userAnswer === answers[currentQuestion]) {
+                document.getElementById('feedback').innerText = getRandomCorrectFeedback();
+                document.getElementById('feedback').classList.add('correct');
+                document.getElementById('feedback').classList.remove('incorrect');
+                currentQuestion++;
+                showQuestion();
+            } else {
+                document.getElementById('feedback').innerText = 'Błędna odpowiedź';
+                document.getElementById('feedback').classList.add('incorrect');
+                document.getElementById('feedback').classList.remove('correct');
+            }
+        }
+
+        function startTimer() {
+            timerId = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').innerText = `Czas: ${timeLeft} minut`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    endQuiz();
+                }
+            }, 60000);
+        }
+
+        function endQuiz() {
+            alert('Koniec gry!');
+            document.getElementById('quiz').classList.add('hidden');
+        }
+
+        function generateRandomQuestions() {
+            const easyQuestions = [
+                "1 + 1", "2 - 1", "3 + 2", "5 - 2", "7 + 1",
+                "4 + 5", "10 - 3", "8 + 1", "3 + 4", "6 + 4",
+                "2 - 1", "5 - 0", "9 - 4"
+            ];
+            const normalQuestions = [
+                "30 + 18", "3 * 4", "8 / 2", "53 - 61", "66 + 77",
+                "12 / 3", "9 * 1", "48 - 12", "78 + 38", "15 - 15",
+                "20 / 5", "2 * 3", "10 + 10", "14 - 6", "18 / 2",
+                "3 * 5", "9 - 3", "6 + 2", "7 * 1", "8 - 4",
+                "5 / 1", "12 + 6", "11 - 2", "3 * 4", "10 / 2"
+            ];
+            const hardQuestions = [
+                "120 + 28", "15 * 3", "24 / 6", "102 - 25", "187 + 22",
+                "30 / 5", "4 * 7", "87 - 13", "50 / 10", "141 + 16",
+                "7 * 9", "45 - 10", "6 + 18", "36 / 4", "9 * 5",
+                "100 / 5", "8 + 24", "60 / 12", "25 - 15", "40 + 10",
+                "80 / 4", "14 * 3", "30 + 35", "60 - 20", "30 + 20"
+            ];
+
+            switch(currentLevel) {
+                case 'łatwy':
+                    return easyQuestions.sort(() => 0.5 - Math.random()).slice(0, 25);
+                case 'normalny':
+                    return normalQuestions.sort(() => 0.5 - Math.random()).slice(0, 25);
+                case 'matematyk':
+                    return hardQuestions.sort(() => 0.5 - Math.random()).slice(0, 25);
+                default:
+                    return [];
+            }
+        }
+
+        function calculateAnswers(questions) {
+            return questions.map(question => eval(question));
+        }
+
+        function getTimeForLevel(level) {
+            switch(level) {
+                case 'łatwy':
+                    return 25;
+                case 'normalny':
+                    return 10;
+                case 'matematyk':
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+
+        function getRandomCorrectFeedback() {
+            const feedbackMessages = ['Dobrze!', 'Świetnie!', 'Doskonale!'];
+            return feedbackMessages[Math.floor(Math.random() * feedbackMessages.length)];
+        }
+
+        function changeButtonStyle(style) {
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                if (style === 'style1') {
+                    button.style.backgroundColor = '#007bff';
+                    button.style.color = 'white';
+                } else if (style === 'style2') {
+                    button.style.backgroundColor = '#ff5733';
+                    button.style.color = 'black';
+                } else if (style === 'style3') {
+                    button.style.backgroundColor = '#28a745';
+                    button.style.color = 'white';
+                } else if (style === 'style4') {
+                    button.style.backgroundColor = '#ffc107';
+                    button.style.color = 'black';
+                } else if (style === 'style5') {
+                    button.style.backgroundColor = '#17a2b8';
+                    button.style.color = 'white';
+                }
+            });
+        }
+
+        function changeBackground(color) {
+            document.body.style.backgroundColor = color;
+        }
+
+        function openAd(url) {
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
